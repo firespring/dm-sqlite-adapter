@@ -1,30 +1,35 @@
 require 'pathname'
 
-source :rubygems
+source 'https://rubygems.org'
 
 gemspec
 
-SOURCE         = ENV.fetch('SOURCE', :git).to_sym
-REPO_POSTFIX   = SOURCE == :path ? ''                                : '.git'
-DATAMAPPER     = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'http://github.com/datamapper'
-DM_VERSION     = '~> 1.3.0.beta'
-DO_VERSION     = '~> 0.10.17'
+SOURCE = ENV.fetch('SOURCE', :git).to_sym
+REPO_POSTFIX = SOURCE == :path ? '' : '.git'
+DATAMAPPER = (SOURCE == :path) ? Pathname(__FILE__).dirname.parent : 'https://github.com/firespring'
+DM_VERSION = '~> 1.3.0.beta'
+DO_VERSION = '~> 0.10.17'
 CURRENT_BRANCH = ENV.fetch('GIT_BRANCH', 'master')
 
-do_options = {}
-do_options[:git] = "#{DATAMAPPER}/do#{REPO_POSTFIX}" if ENV['DO_GIT'] == 'true'
+options = {}
+options[:branch] = CURRENT_BRANCH unless SOURCE == :path
 
-gem 'do_sqlite3',   DO_VERSION, do_options.dup
-gem 'dm-do-adapter', DM_VERSION,
-  SOURCE  => "#{DATAMAPPER}/dm-do-adapter#{REPO_POSTFIX}",
-  :branch => CURRENT_BRANCH
+do_options = {}
+# DO_GIT is for the DataObjects repo which is not managed with thor in the same way as the rest of the gems. It is possible to have SOURCE configured
+# as path while datamapper-do should use git. Configure these options separately.
+if ENV['DO_GIT'] == 'true'
+  do_options[:branch] = CURRENT_BRANCH
+  do_options[:git] = "#{DATAMAPPER}/datamapper-do#{REPO_POSTFIX}"
+end
+
+gem 'do_sqlite3', DO_VERSION, do_options.dup
+
+options[SOURCE] = "#{DATAMAPPER}/dm-do-adapter#{REPO_POSTFIX}"
+gem 'dm-do-adapter', DM_VERSION, options.dup
 
 group :development do
-
-  gem 'dm-migrations', DM_VERSION,
-    SOURCE  => "#{DATAMAPPER}/dm-migrations#{REPO_POSTFIX}",
-    :branch => CURRENT_BRANCH
-
+  options[SOURCE] = "#{DATAMAPPER}/dm-migrations#{REPO_POSTFIX}"
+  gem 'dm-migrations', DM_VERSION, options.dup
 end
 
 platforms :mri_18 do
@@ -39,9 +44,8 @@ end
 
 group :datamapper do
 
-  gem 'dm-core', DM_VERSION,
-    SOURCE  => "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}",
-    :branch => CURRENT_BRANCH
+  options[SOURCE] = "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}"
+  gem 'dm-core', DM_VERSION, options.dup
 
   gem 'data_objects', DO_VERSION, do_options.dup
 
@@ -49,9 +53,8 @@ group :datamapper do
   plugins = plugins.to_s.tr(',', ' ').split.push('dm-migrations').uniq
 
   plugins.each do |plugin|
-    gem plugin, DM_VERSION,
-      SOURCE  => "#{DATAMAPPER}/#{plugin}#{REPO_POSTFIX}",
-      :branch => CURRENT_BRANCH
+    options[SOURCE] = "#{DATAMAPPER}/#{plugin}#{REPO_POSTFIX}"
+    gem plugin, DM_VERSION, options.dup
   end
 
 end
