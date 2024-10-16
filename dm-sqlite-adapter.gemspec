@@ -6,9 +6,9 @@ Gem::Specification.new do |gem|
   gem.name        = 'sbf-dm-sqlite-adapter'
   gem.summary     = 'Sqlite3 Adapter for DataMapper'
   gem.description = gem.summary
-  gem.email       = 'dan.kubb@gmail.com'
+  gem.email       = ['opensource@firespring.com']
   gem.homepage    = 'http://datamapper.org'
-  gem.authors     = [ 'Dan Kubb' ]
+  gem.authors     = ['opensource_firespring']
 
   gem.files            = `git ls-files`.split("\n")
   gem.test_files       = `git ls-files -- {spec}/*`.split("\n")
