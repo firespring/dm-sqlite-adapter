@@ -22,14 +22,14 @@ if ENV['DO_GIT'] == 'true'
   do_options[:git] = "#{DATAMAPPER}/datamapper-do#{REPO_POSTFIX}"
 end
 
-gem 'do_sqlite3', DO_VERSION, do_options.dup
+gem 'sbf-do_sqlite3', DO_VERSION, do_options.dup
 
 options[SOURCE] = "#{DATAMAPPER}/dm-do-adapter#{REPO_POSTFIX}"
-gem 'dm-do-adapter', DM_VERSION, options.dup
+gem 'sbf-dm-do-adapter', DM_VERSION, options.dup
 
 group :development do
   options[SOURCE] = "#{DATAMAPPER}/dm-migrations#{REPO_POSTFIX}"
-  gem 'dm-migrations', DM_VERSION, options.dup
+  gem 'sbf-dm-migrations', DM_VERSION, options.dup
 end
 
 platforms :mri_18 do
@@ -45,16 +45,16 @@ end
 group :datamapper do
 
   options[SOURCE] = "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}"
-  gem 'dm-core', DM_VERSION, options.dup
+  gem 'sbf-dm-core', DM_VERSION, options.dup
 
-  gem 'data_objects', DO_VERSION, do_options.dup
+  gem 'sbf-data_objects', DO_VERSION, do_options.dup
 
   plugins = ENV['PLUGINS'] || ENV['PLUGIN']
   plugins = plugins.to_s.tr(',', ' ').split.push('dm-migrations').uniq
 
   plugins.each do |plugin|
     options[SOURCE] = "#{DATAMAPPER}/#{plugin}#{REPO_POSTFIX}"
-    gem plugin, DM_VERSION, options.dup
+    gem "sbf-#{plugin}", DM_VERSION, options.dup
   end
 
 end
