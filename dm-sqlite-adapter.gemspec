@@ -17,10 +17,10 @@ Gem::Specification.new do |gem|
   gem.require_paths = %w[ lib ]
   gem.version       = DataMapper::SqliteAdapter::VERSION
 
-  gem.add_runtime_dependency('sbf-dm-do-adapter', [ '~> 1.3.0' ])
-  gem.add_runtime_dependency('sbf-do_sqlite3',    [ '~> 0.11.0'     ])
+  gem.add_runtime_dependency('sbf-dm-do-adapter', [ '~> 1.3' ])
+  gem.add_runtime_dependency('sbf-do_sqlite3',    [ '~> 0.11'     ])
 
-  gem.add_development_dependency('sbf-dm-migrations', [ '~> 1.3.0' ])
+  gem.add_development_dependency('sbf-dm-migrations', [ '~> 1.3' ])
   gem.add_development_dependency('rake',          [ '~> 0.9.2'      ])
   gem.add_development_dependency('rspec',         [ '~> 1.3.2'      ])
 end
